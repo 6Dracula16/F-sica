@@ -26,7 +26,7 @@ print(f"Температура постоянна: T = {T_const:.2f} К ({t_init
 
 m_calculated = (P_exp_Pa[0] * V_exp_m3[0] * M_molar) / (R * T_const)
 print(f"Проверка массы газа:")
-print(f"  Задано на скриншоте: {m_exp} кг")
+print(f"  Задано: {m_exp} кг")
 print(f"  Рассчитано по формуле: {m_calculated:.4f} кг")
 print("-" * 40)
 
