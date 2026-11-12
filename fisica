@@ -55,23 +55,3 @@ print(f"  Относительная погрешность P*V: {rel_PV:.2f}%")
 print(f"  Абсолютная погрешность P*V: {abs_PV:.2f} Дж")
 print(f"  Результат: P*V = {products_PV[0]:.2f} ± {abs_PV:.2f} Дж")
 print("-" * 40)
-
-plt.figure(figsize=(9, 6))
-
-plt.errorbar(V_exp_L, P_exp_kPa, xerr=delta_V_L, yerr=delta_P_kPa, 
-             fmt='o', color='red', capsize=5, label='Экспериментальные данные')
-
-V_theor = np.linspace(min(V_exp_L)*0.8, max(V_exp_L)*1.2, 100)
-const_kPa_L = P_exp_kPa[0] * V_exp_L[0] 
-P_theor = const_kPa_L / V_theor
-
-plt.plot(V_theor, P_theor, 'b--', linewidth=2, label=f'Теория: P·V = {const_kPa_L:.1f} кПа·л')
-
-plt.title(f'Изотермический процесс (T = const = {t_initial_C} °C)\nГаз: {gas_name}', fontsize=14)
-plt.xlabel('Объем V, л', fontsize=12)
-plt.ylabel('Давление P, кПа', fontsize=12)
-plt.legend(fontsize=11)
-plt.grid(True, linestyle=':', alpha=0.7)
-plt.tight_layout()
-
-plt.show()
