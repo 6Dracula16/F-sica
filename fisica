@@ -1,0 +1,77 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+gas_name = "Пропан"
+M_molar = 0.044
+t_initial_C = 20
+T_const = t_initial_C + 273.15
+
+V0 = 0.452
+P0 = 612.2
+m_exp = 0.005
+
+R = 8.314
+
+V_exp_L = np.array([0.452, 0.500, 0.600, 0.700, 0.800])
+P_exp_kPa = np.array([612.2, 553.4, 461.2, 395.3, 345.9])
+
+V_exp_m3 = V_exp_L * 1e-3
+P_exp_Pa = P_exp_kPa * 1e3
+
+delta_P_kPa = 10.0  
+delta_V_L = 0.05    
+
+print(f"--- Лабораторная работа: Изотермический процесс ({gas_name}) ---")
+print(f"Температура постоянна: T = {T_const:.2f} К ({t_initial_C} °C)\n")
+
+m_calculated = (P_exp_Pa[0] * V_exp_m3[0] * M_molar) / (R * T_const)
+print(f"Проверка массы газа:")
+print(f"  Задано на скриншоте: {m_exp} кг")
+print(f"  Рассчитано по формуле: {m_calculated:.4f} кг")
+print("-" * 40)
+
+products_PV = P_exp_Pa * V_exp_m3
+mean_PV = np.mean(products_PV)
+
+print(f"Проверка закона P*V = const:")
+for i in range(len(V_exp_L)):
+    print(f"  Опыт {i+1}: V = {V_exp_L[i]:.3f} л, P = {P_exp_kPa[i]:.1f} кПа -> P*V = {products_PV[i]:.2f} Дж")
+print(f"Среднее значение P*V: {mean_PV:.2f} Дж")
+print("-" * 40)
+
+abs_P = delta_P_kPa
+abs_V = delta_V_L
+
+rel_P = (abs_P / P_exp_kPa[0]) * 100
+rel_V = (abs_V / V_exp_L[0]) * 100
+
+rel_PV = rel_P + rel_V
+abs_PV = (rel_PV / 100) * products_PV[0]
+
+print(f"Расчет погрешностей для первой точки (V={V_exp_L[0]} л, P={P_exp_kPa[0]} кПа):")
+print(f"  Относительная погрешность P: {rel_P:.2f}%")
+print(f"  Относительная погрешность V: {rel_V:.2f}%")
+print(f"  Относительная погрешность P*V: {rel_PV:.2f}%")
+print(f"  Абсолютная погрешность P*V: {abs_PV:.2f} Дж")
+print(f"  Результат: P*V = {products_PV[0]:.2f} ± {abs_PV:.2f} Дж")
+print("-" * 40)
+
+plt.figure(figsize=(9, 6))
+
+plt.errorbar(V_exp_L, P_exp_kPa, xerr=delta_V_L, yerr=delta_P_kPa, 
+             fmt='o', color='red', capsize=5, label='Экспериментальные данные')
+
+V_theor = np.linspace(min(V_exp_L)*0.8, max(V_exp_L)*1.2, 100)
+const_kPa_L = P_exp_kPa[0] * V_exp_L[0] 
+P_theor = const_kPa_L / V_theor
+
+plt.plot(V_theor, P_theor, 'b--', linewidth=2, label=f'Теория: P·V = {const_kPa_L:.1f} кПа·л')
+
+plt.title(f'Изотермический процесс (T = const = {t_initial_C} °C)\nГаз: {gas_name}', fontsize=14)
+plt.xlabel('Объем V, л', fontsize=12)
+plt.ylabel('Давление P, кПа', fontsize=12)
+plt.legend(fontsize=11)
+plt.grid(True, linestyle=':', alpha=0.7)
+plt.tight_layout()
+
+plt.show()
